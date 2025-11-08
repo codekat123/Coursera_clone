@@ -25,7 +25,7 @@ class Subject(models.Model):
 class Course(models.Model):
     class Status(models.TextChoices):
         AVAILABLE = 'AV', 'Available'
-        DEREFT    = 'DF', 'Draft'
+        DERAFT    = 'DF', 'Draft'
     instructor = models.ForeignKey(Instructor, related_name='courses_created', on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, related_name='courses', on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
@@ -65,7 +65,7 @@ class Module(models.Model):
     description = models.TextField(blank=True)
     
     def __str__(self) -> str:
-        return str(self.title) 
+        return str(self.title)
     
     
     

@@ -1,10 +1,10 @@
-from .subject_serializer import SubjectSerializer
-from .item_serializer import (
+from .subject import SubjectSerializer
+from .item import (
     TextSerializer, FileSerializer, ImageSerializer, VideoSerializer
 )
-from .content_serializer import ContentSerializer
-from .module_serializer import ModuleSerializer
-from .course_serializer import CourseSerializer
+from .content import ContentSerializer
+from .module import ModuleSerializer
+from .course import CourseSerializer
 
 __all__ = [
     'SubjectSerializer', 'TextSerializer', 'FileSerializer',

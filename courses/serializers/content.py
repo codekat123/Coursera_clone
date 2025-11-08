@@ -1,7 +1,7 @@
-# courses/serializers/content_serializer.py
+
 from rest_framework import serializers
 from ..models import Content, Text, File, Image, Video
-from .item_serializer import (
+from .item import (
     TextSerializer,
     FileSerializer,
     ImageSerializer,
@@ -9,7 +9,6 @@ from .item_serializer import (
 )
 
 class ContentSerializer(serializers.ModelSerializer):
-    item = serializers.SerializerMethodField()
 
     class Meta:
         model = Content
