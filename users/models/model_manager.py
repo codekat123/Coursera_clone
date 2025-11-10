@@ -9,7 +9,7 @@ class CustomUserManager(BaseUserManager,PolymorphicManager):
                raise ValueError('the username field must be set')
           user = self.model(username=username,**extrafields)
           user.set_password(password)
-          user.save(using=self.__db)
+          user.save(using=self._db)
           return user
      
      def create_superuser(self,username,password,**extrafields):

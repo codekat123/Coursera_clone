@@ -4,7 +4,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import filters
-from ..models import Course, Subject, Instructor
+from ..models import Course, Subject
+from users.models import Instructor
 from ..serializers.course import CourseDetailSerializer,CourseListSerializer,CourseCreateUpdateSerializer
 from users.permissions import IsInstructor
 from django.core.cache import cache

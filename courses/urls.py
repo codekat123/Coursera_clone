@@ -20,7 +20,7 @@ from .views.modules import (
 from .views.content import (
     ContentListAPIView,
     ContentRetrieveAPIView,
-    ContentCreateAPIView,
+    CreateItemWithContentAPIView,
     ContentDestroyAPIView
 )
 app_name = "courses"
@@ -100,7 +100,7 @@ urlpatterns += [
         name="module-delete",
     ),
     path('modules/<int:module_id>/contents/', ContentListAPIView.as_view(), name='content-list'),
-    path('modules/<int:module_id>/contents/create/', ContentCreateAPIView.as_view(), name='content-create'),
+    path('contents/create/', CreateItemWithContentAPIView.as_view(), name='content-create'),
     path('contents/<int:id>/', ContentRetrieveAPIView.as_view(), name='content-retrieve'),
     path('contents/<int:id>/delete/', ContentDestroyAPIView.as_view(), name='content-delete'),
 ]

@@ -30,7 +30,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'users',
     'courses',
+    'enrollments',
 ]
+
+# Custom user model
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -147,8 +151,8 @@ SIMPLE_JWT = {
 }
 
 
+AUTH_USER_MODEL = 'users.User'
 
-  
 REDIS_USER = os.getenv("REDIS_USERNAME")
 REDIS_PASS = os.getenv("REDIS_PASSWORD")
 

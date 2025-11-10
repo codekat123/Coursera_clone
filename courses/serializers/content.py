@@ -1,5 +1,5 @@
-
 from rest_framework import serializers
+from django.contrib.contenttypes.models import ContentType
 from ..models import Content, Text, File, Image, Video
 from .item import (
     TextSerializer,
@@ -9,7 +9,10 @@ from .item import (
 )
 
 class ContentSerializer(serializers.ModelSerializer):
-
+    item = serializers.SerializerMethodField()
+    content_type = serializers.SlugRelatedField(
+        slug_field='model', queryset=ContentType.objects.all()
+    )
     class Meta:
         model = Content
         fields = ['id', 'module', 'content_type', 'object_id', 'item']

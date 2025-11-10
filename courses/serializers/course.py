@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from ..models import Course
 from .subject import SubjectSerializer
-from .module import ModuleSerializer
+from .module import ModuleListRetrieveSerializer
 
 class CourseDetailSerializer(serializers.ModelSerializer):
-    modules = ModuleSerializer(many=True, read_only=True)
+    modules = ModuleListRetrieveSerializer(many=True, read_only=True)
     subject = SubjectSerializer(read_only=True)
     instructor = serializers.StringRelatedField()
 

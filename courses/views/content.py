@@ -1,6 +1,7 @@
 from rest_framework.generics import (
     CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
 )
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import ValidationError, PermissionDenied
@@ -8,6 +9,14 @@ from django.shortcuts import get_object_or_404
 from ..models import Content, Module
 from ..serializers.content import ContentSerializer
 from users.permissions import IsInstructor
+from django.contrib.contenttypes.models import ContentType
+from ..models import Module, Content, Text, File, Image, Video
+from ..serializers.item import (
+    TextSerializer,
+    FileSerializer,
+    ImageSerializer,
+    VideoSerializer
+)
 
 
 class ContentListAPIView(ListAPIView):
@@ -43,26 +52,55 @@ class ContentRetrieveAPIView(RetrieveAPIView):
         return content
 
 
-class ContentCreateAPIView(CreateAPIView):
+ITEM_SERIALIZERS = {
+    'text': TextSerializer,
+    'file': FileSerializer,
+    'image': ImageSerializer,
+    'video': VideoSerializer
+}
+
+
+class CreateItemWithContentAPIView(CreateAPIView):
     """
-    Allows an instructor to add content to one of their modules.
-    The module ID must be provided in the URL.
+    Creates both an Item (Text/File/Image/Video) and its Content link in one request.
     """
-    serializer_class = ContentSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsInstructor]
 
-    def perform_create(self, serializer):
-        module_id = self.kwargs.get('module_id')
+    def create(self, request, *args, **kwargs):
+        item_type = request.data.get('type')
+        module_id = request.data.get('module_id')
+        item_data = request.data.get('data')
+
+        if not item_type or item_type not in ITEM_SERIALIZERS:
+            raise ValidationError({'detail': 'Invalid or missing item type.'})
+
         if not module_id:
-            raise ValidationError({'detail': 'Module ID must be included in the URL.'})
+            raise ValidationError({'detail': 'Module ID is required.'})
 
         module = get_object_or_404(Module, id=module_id)
-
-        if module.course.instructor != self.request.user:
+        if module.course.instructor != request.user:
             raise PermissionDenied({'detail': 'You can only add content to your own modules.'})
 
-        serializer.save(module=module)
+
+        serializer_class = ITEM_SERIALIZERS[item_type]
+        item_serializer = serializer_class(data=item_data)
+        item_serializer.is_valid(raise_exception=True)
+        item = item_serializer.save(instructor=request.user)
+
+
+        content_type = ContentType.objects.get_for_model(item)
+        content = Content.objects.create(
+            module=module,
+            content_type=content_type,
+            object_id=item.id
+        )
+
+        return Response({
+            'message': 'Item and content created successfully.',
+            'content_id': content.id,
+            'item': item_serializer.data
+        })
 
 
 class ContentDestroyAPIView(DestroyAPIView):
