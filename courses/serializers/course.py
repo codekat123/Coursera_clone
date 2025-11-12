@@ -12,7 +12,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
         model = Course
         fields = [
             'id', 'title', 'slug', 'overview', 'subject',
-            'instructor', 'status', 'created', 'modules'
+            'instructor', 'status', 'created', 'modules','price',
         ]
         read_only_fields = ['slug', 'created']
 
@@ -21,12 +21,12 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 class CourseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id', 'title', 'slug', 'overview', 'subject', 'instructor']
+        fields = ['id', 'title', 'slug', 'overview', 'subject', 'instructor','price']
 
 
 
 class CourseCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['title', 'overview', 'status']
+        fields = ['title', 'overview', 'status','price']
 

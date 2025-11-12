@@ -6,4 +6,6 @@ urlpatterns = [
     path('user/',include('users.urls',namespace='users')),
     path('courses/',include('courses.urls',namespace='courses')),
     path('enrollments/',include('enrollments.urls',namespace='enrollments')),
+    path('quiz/',include('quiz.urls',namespace='quiz')),
+    path('payments/',include('payments.urls',namespace='payments')),
 ]

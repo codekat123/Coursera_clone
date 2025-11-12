@@ -15,7 +15,7 @@ class Course(models.Model):
     slug = models.SlugField(max_length=250, unique=True, blank=True, null=True)
     overview = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=2, choices=Status, default=Status.AVAILABLE)
+    status = models.CharField(max_length=2, choices=Status, default=Status.DERAFT)
     price = models.DecimalField(max_digits=5,decimal_places=2)
 
     class Meta:

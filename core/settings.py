@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'users',
     'courses',
     'enrollments',
+    'quiz',
+    'payments',
 ]
 
 # Custom user model
@@ -119,9 +121,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "static/media"
 
 
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -150,9 +149,6 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-
-AUTH_USER_MODEL = 'users.User'
-
 REDIS_USER = os.getenv("REDIS_USERNAME")
 REDIS_PASS = os.getenv("REDIS_PASSWORD")
 
@@ -177,3 +173,10 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Cairo'
+
+# Payments / PayPal
+DEFAULT_CURRENCY = os.getenv("DEFAULT_CURRENCY", "USD")
+PAYPAL_ENV = os.getenv("PAYPAL_ENV", "sandbox")
+PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID", "")
+PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET", "")
+PAYPAL_WEBHOOK_ID = os.getenv("PAYPAL_WEBHOOK_ID", "")

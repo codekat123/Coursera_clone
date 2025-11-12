@@ -1,11 +1,13 @@
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView,DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError,PermissionDenied
 from .serializers import EnrollmentSerializer
 from .models import Enrollment
 from courses.models import Course
 from users.permissions import IsStudent
+from django.shortcuts import get_object_or_404
+
 
 class EnrollmentCreateView(CreateAPIView):
     queryset = Enrollment.objects.all()
@@ -29,3 +31,19 @@ class EnrollmentCreateView(CreateAPIView):
             raise ValidationError({'detail': 'Already enrolled in this course.'})
 
         serializer.save(student=student, course=course)
+
+class EnrollmentDestroyView(DestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsStudent]
+    queryset = Enrollment.objects.all()
+
+    def get_object(self):
+        student = self.request.user
+        course_slug = self.kwargs.get('slug')
+
+        enrollment = get_object_or_404(
+            self.queryset,
+            student=student,
+            course__slug=course_slug
+        )
+        return enrollment
