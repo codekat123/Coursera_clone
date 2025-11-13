@@ -29,9 +29,8 @@ class CourseCreateAPIView(CreateAPIView):
 
         subject = get_object_or_404(Subject, slug=slug)
         user = self.request.user
-
-        if not isinstance(user, Instructor):
-            raise ValidationError({"detail": "Only instructors can create courses."})
+        if not hasattr(user, 'instructor'):
+            raise PermissionDenied({"detail": "Only instructors can create courses."})
 
         serializer.save(subject=subject, instructor=user)
 

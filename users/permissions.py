@@ -1,13 +1,14 @@
 from rest_framework import permissions
+from users.models import Instructor, Student
 
 class IsInstructor(permissions.BasePermission):
     def has_permission(self, request, view):
-        return hasattr(request.user, 'instructor')
+        return isinstance(request.user, Instructor)
 
 class IsStudent(permissions.BasePermission):
     def has_permission(self, request, view):
-        return hasattr(request.user, 'student')
+        return isinstance(request.user, Student)
 
 class IsOwnerInstructor(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        return hasattr(request.user, 'instructor') and obj.instructor == request.user
+        return isinstance(request.user, Instructor) and getattr(obj, 'instructor_id', None) == request.user.id

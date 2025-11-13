@@ -54,6 +54,7 @@ class CoursesAPITests(APITestCase):
             'title': title,
             'overview': 'Basics of Python',
             'status': 'AV',
+            'price': 10,
         }
         resp = self.client.post(url, payload, format='json')
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)

@@ -8,7 +8,6 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django.conf import settings
-
 from users.permissions import IsStudent
 from courses.models.course import Course
 from enrollments.models import Enrollment
@@ -29,7 +28,7 @@ class PayPalCreateOrderView(APIView):
 
         currency = request.data.get("currency") or getattr(settings, "DEFAULT_CURRENCY", "USD")
 
-        # Create local payment record
+
         payment = Payment.objects.create(
             student=student,
             course=course,
@@ -42,7 +41,7 @@ class PayPalCreateOrderView(APIView):
             order = paypal_create_order(amount=str(course.price), currency=currency)
         except Exception as e:
             payment.status = Payment.Status.FAILED
-            payment.save(update_fields=["status"]) 
+            payment.save(update_fields=["status"])
             return Response({"detail": "Failed to create PayPal order.", "error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
 
         payment.provider_order_id = getattr(order, "id", None)
